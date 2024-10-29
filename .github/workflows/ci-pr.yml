@@ -1,0 +1,25 @@
+name: CI Pipeline for PR
+  
+on:
+  pull_request:
+    branches: [ master ]
+    types: [opened, synchronize]
+
+jobs:
+  build-test:
+    uses: ./.github/workflows/build-java.yml
+    secrets: inherit
+  terraform-plan:
+    uses: ./.github/workflows/terraform-plan.yml
+    secrets: inherit
+  opa-validation:
+    needs: [terraform-plan]
+    uses: ./.github/workflows/opa-validation.yml
+    secrets: inherit
+  auto-approve-merge:
+    needs: [build-test, terraform-plan, validation]
+    uses: ./.github/workflows/auto-approve-merge.yml
+    with:
+      is_validated: ${{ needs.validation.outputs.is_validated }}
+      pr_number: ${{ github.event.pull_request.number }}
+    secrets: inherit

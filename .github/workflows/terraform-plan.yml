@@ -1,11 +1,8 @@
-name: Terraform
+name: Terraform Plan
 
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
-    types: [opened, synchronize]
+  workflow_call:
+
 jobs:
   Run-Terraform:
     runs-on: ubuntu-latest
@@ -45,6 +42,3 @@ jobs:
         path: terraform/tfplan.json
         retention-days: 1
         overwrite: true
-
-
-    
