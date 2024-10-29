@@ -1,0 +1,42 @@
+name: AI Code Review
+on:
+  workflow_call:
+    outputs:
+      is_validated:
+        description: 'Validation status'
+        value: ${{ jobs.Run-Code-Review.outputs.is_validated }}
+      comments:
+        description: 'Comments'
+        value: ${{ jobs.Run-Code-Review.outputs.comments }}
+
+jobs:
+  Run-Code-Review:
+    runs-on: ubuntu-latest
+    outputs:
+      is_validated: ${{ steps.step_validated.outputs.is_validated }}
+      comments: ${{ steps.step_validated.outputs.comments }}
+    steps:
+    - name: Check out repository code
+      uses: actions/checkout@v4
+
+    # Print the GitHub event context
+    - name: Print GitHub Event Context
+      env:
+        GITHUB_CONTEXT: ${{ toJSON(github) }}
+      run: |
+        echo "GitHub Event Context:"
+        echo "$GITHUB_CONTEXT"
+      shell: bash
+
+    - name: AI Code Reviewer
+      uses: junwen-shift/ai-code-reviewer@main
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # The GITHUB_TOKEN is there by default so you just need to keep it like it is and not necessarily need to add it as secret as it will throw an error. [More Details](https://docs.github.com/en/actions/security-guides/automatic-token-authentication#about-the-github_token-secret)
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        OPENAI_API_MODEL: "gpt-4o" # Optional: defaults to "gpt-4"
+
+    - name: Write output
+      id: step_validated
+      run: |
+        echo "is_validated=true" >> $GITHUB_OUTPUT
+        echo "comments=test" >> $GITHUB_OUTPUT

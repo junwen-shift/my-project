@@ -16,8 +16,12 @@ jobs:
     needs: [terraform-plan]
     uses: ./.github/workflows/opa-validation.yml
     secrets: inherit
+  code-review:
+    needs: [build-test]
+    uses: ./.github/workflows/code-review.yml
+    secrets: inherit
   auto-approve-merge:
-    needs: [build-test, terraform-plan, opa-validation]
+    needs: [build-test, terraform-plan, opa-validation, code-review]
     uses: ./.github/workflows/auto-approve-merge.yml
     with:
       is_validated: ${{ needs.opa-validation.outputs.is_validated }}
