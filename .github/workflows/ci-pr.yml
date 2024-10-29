@@ -20,6 +20,6 @@ jobs:
     needs: [build-test, terraform-plan, opa-validation]
     uses: ./.github/workflows/auto-approve-merge.yml
     with:
-      is_validated: ${{ needs.validation.outputs.is_validated }}
+      is_validated: ${{ needs.opa-validation.outputs.is_validated }}
       pr_number: ${{ github.event.pull_request.number }}
     secrets: inherit
