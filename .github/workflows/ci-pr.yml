@@ -1,4 +1,4 @@
-name: CI CD Pipeline for PR
+name: CI Pipeline for PR
   
 on:
   pull_request:
@@ -6,18 +6,18 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  build-java:
+  build-test:
     uses: ./.github/workflows/build-java.yml
     secrets: inherit
   terraform-plan:
     uses: ./.github/workflows/terraform-plan.yml
     secrets: inherit
-  validation:
+  opa-validation:
     needs: [terraform-plan]
     uses: ./.github/workflows/opa-validation.yml
     secrets: inherit
   auto-approve-merge:
-    needs: [build-java, terraform-plan, validation]
+    needs: [build-test, terraform-plan, validation]
     uses: ./.github/workflows/auto-approve-merge.yml
     with:
       is_validated: ${{ needs.validation.outputs.is_validated }}
