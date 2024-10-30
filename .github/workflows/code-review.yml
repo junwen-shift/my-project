@@ -2,19 +2,19 @@ name: AI Code Review
 on:
   workflow_call:
     outputs:
-      is_validated:
+      is_approvable:
         description: 'Validation status'
-        value: ${{ jobs.Run-Code-Review.outputs.is_validated }}
-      comments:
-        description: 'Comments'
-        value: ${{ jobs.Run-Code-Review.outputs.comments }}
+        value: ${{ jobs.Run-Code-Review.outputs.is_approvable }}
+      summary:
+        description: 'aiSummary'
+        value: ${{ jobs.Run-Code-Review.outputs.summary }}
 
 jobs:
   Run-Code-Review:
     runs-on: ubuntu-latest
     outputs:
-      is_validated: ${{ steps.step_validated.outputs.is_validated }}
-      comments: ${{ steps.step_validated.outputs.comments }}
+      is_approvable: ${{ steps.ai_reviewer.outputs.is_approvable }}
+      summary: ${{ steps.ai_reviewer.outputs.aiSummary }}
     steps:
     - name: Check out repository code
       uses: actions/checkout@v4
@@ -40,6 +40,5 @@ jobs:
       id: step_validated
       run: |
         echo "${{ steps.ai_reviewer.outputs.aiSummary }}"
-        echo "is_validated=true" >> $GITHUB_OUTPUT
-        echo "comments=test" >> $GITHUB_OUTPUT
+        echo "${{ steps.ai_reviewer.outputs.is_approvable }}"
         
