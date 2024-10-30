@@ -1,6 +1,6 @@
 # Resource: Generate a random string
 resource "random_string" "example" {
-  count = 4
+  count = 2
   length  = 16
   special = false
   upper   = true
