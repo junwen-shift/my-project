@@ -23,7 +23,3 @@ opa eval --data  tests/terraform.rego --input  terraform/tfplan.json "data.terra
 
 opa eval --data  tests/terraform.rego --input  terraform/tfplan.json "data.terraform.policy.resource_change_limits.authz" -f raw
 opa exec --decision "terraform/policy/resource_change_limits/authz" -b tests/ terraform/tfplan.json
-
-need to delete ##placeholer demo
-
-need to delete ##placeholer demo
