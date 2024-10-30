@@ -30,13 +30,17 @@ jobs:
 
     - name: AI Code Reviewer
       uses: junwen-shift/ai-codereviewer@main
+      id: ai_reviewer
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # The GITHUB_TOKEN is there by default so you just need to keep it like it is and not necessarily need to add it as secret as it will throw an error. [More Details](https://docs.github.com/en/actions/security-guides/automatic-token-authentication#about-the-github_token-secret)
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         OPENAI_API_MODEL: "gpt-4o" # Optional: defaults to "gpt-4"
 
-    - name: Write output
+    - name: print output
       id: step_validated
       run: |
+        ai_summary="${{ steps.ai_reviewer.outputs.aiSummary }}"
+        echo "$ai_summary" | jq
         echo "is_validated=true" >> $GITHUB_OUTPUT
         echo "comments=test" >> $GITHUB_OUTPUT
+        
