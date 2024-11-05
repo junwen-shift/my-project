@@ -11,12 +11,10 @@ jobs:
     secrets: inherit
   build-test:
     needs: [check-changes]
-    if: ${{ needs.check-changes.outputs.src_changed }}  == 'true'
     uses: ./.github/workflows/build-java.yml
     secrets: inherit
   terraform-plan:
     needs: [check-changes]
-    if: ${{ needs.check-changes.outputs.infra_changed }}  == 'true'
     uses: ./.github/workflows/terraform-plan.yml
     secrets: inherit
   opa-validation:
