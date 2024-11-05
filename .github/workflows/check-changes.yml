@@ -1,0 +1,50 @@
+name: check-changes
+
+on:
+  workflow_call:
+    outputs:
+      src-changed:
+        value: ${{ jobs.on-folders.outputs.src-changed }}
+      infra-changed:
+        value: ${{ jobs.on-folders.outputs.infra-changed }}
+      common-changed:
+        value: ${{ jobs.on-folders.outputs.common-changed }}
+        
+  workflow_dispatch:
+
+jobs:
+  on-folders:    
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    env:   
+      DOCKER_BUILDKIT: 1
+
+    outputs:
+      src-changed: ${{ steps.changes.outputs.src }}
+      infra-changed: ${{ steps.changes.outputs.infra }}
+      common-changed: ${{ steps.changes.outputs.common }}      
+
+    steps:
+      - run: |
+          echo "${{ github.workflow }} - ${{ github.head_ref}} - ${{ github.ref_name }}'"
+          echo "🚀 The job was automatically triggered by a ${{ github.event_name }} event and is running on a ${{ runner.os }} server."
+
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+        
+      - name: Check project changes
+        uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            src:
+              - 'src/**'
+            infra:
+              - 'terraform/**'
+              - 'tests/**'
+            common:
+              - '.github/workflow/**'
+        
