@@ -11,12 +11,12 @@ jobs:
     secrets: inherit
   build-test:
     needs: [check-changes]
-    if: ${{ needs.check-changes.outputs.src_changed == 'true' }}
+    if: ${{ needs.check-changes.outputs.src_changed }}  == 'true'
     uses: ./.github/workflows/build-java.yml
     secrets: inherit
   terraform-plan:
     needs: [check-changes]
-    if: ${{ needs.check-changes.outputs.infra_changed == 'true' }}
+    if: ${{ needs.check-changes.outputs.infra_changed }}  == 'true'
     uses: ./.github/workflows/terraform-plan.yml
     secrets: inherit
   opa-validation:
@@ -24,7 +24,6 @@ jobs:
     uses: ./.github/workflows/opa-validation.yml
     secrets: inherit
   code-review:
-    needs: [build-test]
     uses: ./.github/workflows/code-review.yml
     secrets: inherit
   auto-approve-merge:
