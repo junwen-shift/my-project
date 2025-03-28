@@ -7,4 +7,3 @@ WORKDIR /usr/app
 
 ENTRYPOINT ["java", "-jar", "java-app-1.0-SNAPSHOT.jar"]
 
-# rest
