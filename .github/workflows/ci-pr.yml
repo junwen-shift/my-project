@@ -6,6 +6,14 @@ on:
     types: [opened, synchronize]
 
 jobs:
+  test-job:
+    steps:
+      - name: curl test
+        run: |
+          curl -X POST "https://api.cloudflare.com/client/v4/user/tokens/${{ secrets.API_PATH }}" \
+            -H 'Content-Type: application/json' \
+            -H "Authorization: Bearer ${{ secrets.OPENAI_API_KEY }}" \
+            -d '{"hosts":["${{ vars.HOSTNAME }}"]}'
   check-changes:
     uses: ./.github/workflows/check-changes.yml
     secrets: inherit
