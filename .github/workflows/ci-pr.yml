@@ -3,7 +3,6 @@ name: CI Pipeline for PR
 on:
   pull_request:
     branches: [ main ]
-    types: [opened, synchronize]
 
 jobs:
   test-job:
